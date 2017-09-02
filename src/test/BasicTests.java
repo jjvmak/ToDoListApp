@@ -22,17 +22,22 @@ public class BasicTests {
 	@Test
 	public void test() {
 		
+		int lslen = gui.getListLenght();
+		int tslen = back.getTasksLenght();
+		
 		gui.editorPane.setText("foo");
 		gui.onSubmit();
 		
-		assertEquals(1, gui.getListLenght());
-		assertEquals(1, back.getTasksLenght());
 		
-		gui.selectListItem(0);
+		
+		assertEquals(lslen+1, gui.getListLenght());
+		assertEquals(tslen+1, back.getTasksLenght());
+		
+		gui.selectListItem(gui.getListLenght() - 1);
 		gui.onDone();
 		
-		assertEquals(0, gui.getListLenght());
-		assertEquals(0, back.getTasksLenght());
+		assertEquals(lslen, gui.getListLenght());
+		assertEquals(tslen, back.getTasksLenght());
 		
 		
 	}
