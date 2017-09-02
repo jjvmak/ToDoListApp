@@ -1,3 +1,4 @@
+package logic;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,7 +14,7 @@ public class Gui {
 	private JFrame frame;
 	private JPanel mainPanel;
 	private List list;
-	private JTextField editorPane;
+	public JTextField editorPane;
 	private JButton btnSubmit;
 	private Back back;
 	private JButton btnDone;
@@ -110,4 +111,14 @@ public class Gui {
 	public void loadTask(String s) {
 		list.add(s);
 	}
+	
+	public int getListLenght() {
+		return list.getItemCount();
+	}
+	
+	public void selectListItem(int i) {
+		list.select(i);
+	}
+
+	
 }
