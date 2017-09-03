@@ -6,8 +6,15 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.List;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JSpinner;
+import java.awt.Choice;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class Gui {
 
@@ -19,37 +26,43 @@ public class Gui {
 	private Back back;
 	private JButton btnDone;
 	private JLabel itemsOnListLabel;
+	private JSpinner dd_spinner;
+	private JSpinner mm_spinner;
+	private JSpinner yy_spinner;
+	private Choice choice;
 
 	public Gui(Back back) {
 		this.back = back;
 		initialize();
-		
+		initSpinners();
+		renderList();
+
 	}
-	
+
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 700, 450);
+		frame.setBounds(100, 100, 700, 479);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
+
 		mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 692, 423);
+		mainPanel.setBounds(0, 0, 692, 452);
 		frame.getContentPane().add(mainPanel);
 		mainPanel.setLayout(null);
-		
+
 		list = new List();
 		list.setBounds(10, 24, 672, 338);
 		mainPanel.add(list);
-		
-		
+
+
 		editorPane = new JTextField();
 		editorPane.setBounds(10, 373, 467, 28);
 		mainPanel.add(editorPane);
-		
+
 		btnSubmit = new JButton("Add");
 		btnSubmit.setBounds(487, 373, 91, 29);
 		mainPanel.add(btnSubmit);
-		
+
 		btnDone = new JButton("Done");
 		btnDone.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -58,10 +71,36 @@ public class Gui {
 		});
 		btnDone.setBounds(588, 373, 91, 29);
 		mainPanel.add(btnDone);
-		
+
 		itemsOnListLabel = new JLabel("New label");
-		itemsOnListLabel.setBounds(10, 4, 672, 14);
+		itemsOnListLabel.setBounds(487, 425, 195, 14);
 		mainPanel.add(itemsOnListLabel);
+
+		dd_spinner = new JSpinner();
+		dd_spinner.setBounds(10, 423, 40, 18);
+		mainPanel.add(dd_spinner);
+
+		mm_spinner = new JSpinner();
+		mm_spinner.setBounds(60, 423, 40, 18);
+		mainPanel.add(mm_spinner);
+
+		yy_spinner = new JSpinner();
+		yy_spinner.setBounds(110, 423, 80, 18);
+		mainPanel.add(yy_spinner);
+
+		choice = new Choice();
+		choice.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				renderList();
+			}
+		});
+
+		choice.setBounds(10, 0, 90, 20);
+		choice.add("All");
+		choice.add("Today");
+		choice.add("Coming");
+		choice.add("Past");
+		mainPanel.add(choice);
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				onSubmit();
@@ -69,56 +108,123 @@ public class Gui {
 		});
 		frame.setVisible(true);
 	}
-	
-	public void onSubmit() {
+
+	public void renderList() {
+
+		String selected =  choice.getSelectedItem();
+		System.out.println(selected);
+		list.removeAll();
+		ArrayList<Task> tmp = back.getTasks();
 		
-		if (editorPane.getText().length()>0) {
-			String text = back.getDate()+" "+editorPane.getText();
-			list.add(text);
-			editorPane.setText("");
-			setLabel();
-			back.addTask(text);
-			back.serializeTaskList();
+		switch (selected) {
+
+		case "All":
+			for (int i  = 0; i < tmp.size(); i++) {
+				list.add(tmp.get(i).toString());
+			}
+			break;
+			
+		case "Today":
+			for (int i  = 0; i < tmp.size(); i++) {
+				if (tmp.get(i).getDate().equals(back.getDate())) {
+					list.add(tmp.get(i).toString());
+				}
+			}
+			break;
+			
+		case "Coming":
+			for (int i  = 0; i < tmp.size(); i++) {
+				if (tmp.get(i).getYy() > back.getCurrentYY() ||
+					tmp.get(i).getYy() >= back.getCurrentYY() && tmp.get(i).getMm() > back.getCurrentMM() ||
+					tmp.get(i).getYy() >= back.getCurrentYY() && tmp.get(i).getMm() >= back.getCurrentMM() && tmp.get(i).getDd() > back.getCurrentDD()) {
+					
+						list.add(tmp.get(i).toString());
+				}
+			}
+			break;
+			
+		case "Past":
+			for (int i  = 0; i < tmp.size(); i++) {
+				if (tmp.get(i).getYy() < back.getCurrentYY() ||
+					tmp.get(i).getYy() <= back.getCurrentYY() && tmp.get(i).getMm() < back.getCurrentMM() ||
+					tmp.get(i).getYy() <= back.getCurrentYY() && tmp.get(i).getMm() <= back.getCurrentMM() && tmp.get(i).getDd() < back.getCurrentDD()) {
+					
+						list.add(tmp.get(i).toString());
+				}
+			}
+			break;
+			
+		default:
+			break;
 		}
-		
-		
 	}
-	
+
+	public void onSubmit() {
+
+		if (editorPane.getText().length()>0) {
+			Task task =  new Task(editorPane.getText(), (int) dd_spinner.getValue(), (int) mm_spinner.getValue(), (int) yy_spinner.getValue());
+			back.addTask(task);
+			back.serializeTaskList();
+			renderList();
+			editorPane.setText("");
+			System.out.println(task.getDate());
+			setLabel();
+			initSpinners();
+		}
+	}
+
 	public void onDone() {
-		
+
 		if (isSomethingSelected()) {
 			int selectedItem = list.getSelectedIndex();
+			String dsc = list.getSelectedItem();
 			list.remove(selectedItem);
 			setLabel();
-			back.removeTask(selectedItem);
+			back.removeTask(dsc);
 			back.serializeTaskList();
+			initSpinners();
 		}
 	}
-	
+
 	public boolean isSomethingSelected() {
-		
+
 		for (int i = 0; i < list.getItemCount(); i++) {
 			if (list.isIndexSelected(i)) return true;
 		}
-		
+
 		return false;
 	}
-	
+
+	public void initSpinners() {
+		String date = back.getDate();
+		int dd = Integer.parseInt(date.substring(0, 2));
+		int mm = Integer.parseInt(date.substring(3, 5));
+		int yy = Integer.parseInt(date.substring(6, 10));
+		dd_spinner.setValue(dd);
+		mm_spinner.setValue(mm);
+		yy_spinner.setValue(yy);
+	}
+
+	public String getSpinnersValue() {
+
+		String date = dd_spinner.getValue()+"."+mm_spinner.getValue()+"."+yy_spinner.getValue();
+		return date;
+
+	}
+
 	public void setLabel() {
 		itemsOnListLabel.setText("Total: "+list.getItemCount()+" tasks");
 	}
-	
+
 	public void loadTask(String s) {
 		list.add(s);
 	}
-	
+
 	public int getListLenght() {
 		return list.getItemCount();
 	}
-	
+
 	public void selectListItem(int i) {
 		list.select(i);
 	}
-
-	
 }
