@@ -22,10 +22,11 @@ public class Back {
 
 	public Back() {
 		deSerializeReservationsList();
+		tasks = sortTasks(tasks);
 		gui = new Gui(this);
 		System.out.println(dtf.format(localDate));
-		
-		
+
+
 		gui.setLabel();
 
 		currentDD = Integer.parseInt(getDate().substring(0, 2));
@@ -44,17 +45,19 @@ public class Back {
 
 	public void addTask(Task t) {
 		tasks.add(t);
+		tasks = sortTasks(tasks);
 		System.out.println(t.toString());
 	}
 
 	public void removeTask(int i) {
 		tasks.remove(i);
 	}
-	
+
 	public void removeTask(String s) {
 		for (int i = 0; i < tasks.size(); i++) {
 			if (tasks.get(i).toString().equals(s)) {
 				tasks.remove(i);
+				tasks = sortTasks(tasks);
 			}
 		}
 	}
@@ -106,7 +109,7 @@ public class Back {
 	public ArrayList<Task> getTasks() {
 		return tasks;
 	}
-	
+
 	public int getCurrentDD() {
 		return currentDD;
 	}
@@ -117,5 +120,23 @@ public class Back {
 
 	public int getCurrentYY() {
 		return currentYY;
+	}
+	//#FML
+	public ArrayList<Task> sortTasks(ArrayList<Task> inpt) {
+		Task temp;
+		for (int i = 1; i < inpt.size(); i++) {
+			for(int j = i ; j > 0 ; j--){
+				if(inpt.get(j).getYy() <= inpt.get(j-1).getYy()){
+					if(inpt.get(j).getMm() <= inpt.get(j-1).getMm()) {
+						if(inpt.get(j).getDd() < inpt.get(j-1).getDd()) {
+							temp = inpt.get(j);
+							inpt.set(j, inpt.get(j-1));
+							inpt.set(j-1, temp);
+						}
+					}
+				}
+			}
+		}
+		return inpt;
 	}
 }

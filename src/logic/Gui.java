@@ -164,12 +164,11 @@ public class Gui {
 		if (editorPane.getText().length()>0) {
 			Task task =  new Task(editorPane.getText(), (int) dd_spinner.getValue(), (int) mm_spinner.getValue(), (int) yy_spinner.getValue());
 			back.addTask(task);
-			back.serializeTaskList();
-			renderList();
+			back.serializeTaskList();	
 			editorPane.setText("");
-			System.out.println(task.getDate());
 			setLabel();
 			initSpinners();
+			renderList();
 		}
 	}
 
@@ -178,11 +177,12 @@ public class Gui {
 		if (isSomethingSelected()) {
 			int selectedItem = list.getSelectedIndex();
 			String dsc = list.getSelectedItem();
-			list.remove(selectedItem);
-			setLabel();
 			back.removeTask(dsc);
 			back.serializeTaskList();
+			list.remove(selectedItem);
+			setLabel();
 			initSpinners();
+			renderList();
 		}
 	}
 
