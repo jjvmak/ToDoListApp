@@ -58,7 +58,7 @@ public class Gui {
 		mainPanel.setLayout(null);
 
 		list = new List();
-		list.setBounds(10, 24, 672, 338);
+		list.setBounds(10, 33, 672, 329);
 		font = new Font("Areal", Font.BOLD,20);
 		list.setFont(font);
 		
@@ -109,12 +109,16 @@ public class Gui {
 			}
 		});
 
-		choice.setBounds(10, 0, 90, 20);
+		choice.setBounds(10, 7, 90, 20);
 		choice.add("All");
 		choice.add("Today");
 		choice.add("Coming");
 		choice.add("Past");
 		mainPanel.add(choice);
+		
+		JLabel lblNewLabel = new JLabel("Date: ");
+		lblNewLabel.setBounds(10, 405, 46, 14);
+		mainPanel.add(lblNewLabel);
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				onSubmit();
