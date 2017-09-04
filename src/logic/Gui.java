@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import java.awt.Choice;
+import java.awt.Font;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
@@ -30,6 +31,7 @@ public class Gui {
 	private JSpinner mm_spinner;
 	private JSpinner yy_spinner;
 	private Choice choice;
+	private Font font;
 
 	public Gui(Back back) {
 		this.back = back;
@@ -52,6 +54,9 @@ public class Gui {
 
 		list = new List();
 		list.setBounds(10, 24, 672, 338);
+		font = new Font("Areal", Font.BOLD,20);
+		list.setFont(font);
+		
 		mainPanel.add(list);
 
 
@@ -166,9 +171,10 @@ public class Gui {
 			back.addTask(task);
 			back.serializeTaskList();	
 			editorPane.setText("");
-			setLabel();
+			
 			initSpinners();
 			renderList();
+			setLabel();
 		}
 	}
 
@@ -180,9 +186,10 @@ public class Gui {
 			back.removeTask(dsc);
 			back.serializeTaskList();
 			list.remove(selectedItem);
-			setLabel();
+			
 			initSpinners();
 			renderList();
+			setLabel();
 		}
 	}
 
