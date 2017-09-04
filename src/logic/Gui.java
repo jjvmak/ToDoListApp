@@ -3,6 +3,8 @@ package logic;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.JButton;
 import java.awt.List;
 import java.awt.event.ActionListener;
@@ -32,6 +34,9 @@ public class Gui {
 	private JSpinner yy_spinner;
 	private Choice choice;
 	private Font font;
+	private SpinnerNumberModel smDD;
+	private SpinnerNumberModel smMM;
+	private SpinnerNumberModel smYY;
 
 	public Gui(Back back) {
 		this.back = back;
@@ -81,15 +86,19 @@ public class Gui {
 		itemsOnListLabel.setBounds(487, 425, 195, 14);
 		mainPanel.add(itemsOnListLabel);
 
-		dd_spinner = new JSpinner();
+		smDD = new SpinnerNumberModel(1, 1, 31, 1);
+		smMM = new SpinnerNumberModel(1, 1, 12, 1);
+		smYY = new SpinnerNumberModel(1, 1, 3000, 1);
+		
+		dd_spinner = new JSpinner(smDD);
 		dd_spinner.setBounds(10, 423, 40, 18);
 		mainPanel.add(dd_spinner);
 
-		mm_spinner = new JSpinner();
+		mm_spinner = new JSpinner(smMM);
 		mm_spinner.setBounds(60, 423, 40, 18);
 		mainPanel.add(mm_spinner);
 
-		yy_spinner = new JSpinner();
+		yy_spinner = new JSpinner(smYY);
 		yy_spinner.setBounds(110, 423, 80, 18);
 		mainPanel.add(yy_spinner);
 
