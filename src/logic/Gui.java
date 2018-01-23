@@ -3,7 +3,6 @@ package logic;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JButton;
 import java.awt.List;
@@ -14,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import java.awt.Choice;
 import java.awt.Font;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
